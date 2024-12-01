@@ -902,18 +902,6 @@ class ExecutionContextFactoryImpl implements ExecutionContextFactory {
     }
     @Override boolean isDestroyed() { return destroyed }
 
-    @Override void finalize() throws Throwable {
-        try {
-            if (!this.destroyed) {
-                this.destroy()
-                logger.warn("ExecutionContextFactoryImpl not destroyed, caught in finalize.")
-            }
-        } catch (Exception e) {
-            logger.warn("Error in destroy, called in finalize of ExecutionContextFactoryImpl", e)
-        }
-        super.finalize()
-    }
-
     /** Trigger ECF destroy and re-init in another thread, after short wait */
     void triggerDynamicReInit() {
         Thread.start("EcfiReInit", {
