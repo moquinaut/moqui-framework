@@ -23,7 +23,16 @@ class LoggerFacadeImpl implements LoggerFacade {
 
     protected final ExecutionContextFactoryImpl ecfi
 
-    LoggerFacadeImpl(ExecutionContextFactoryImpl ecfi) { this.ecfi = ecfi }
+    protected boolean traceEnabled, debugEnabled, infoEnabled, warnEnabled, errorEnabled
+
+    LoggerFacadeImpl(ExecutionContextFactoryImpl ecfi) {
+        this.ecfi = ecfi
+        this.traceEnabled = false
+        this.debugEnabled = false
+        this.infoEnabled = true
+        this.warnEnabled = true
+        this.errorEnabled = true
+    }
 
     void log(String levelStr, String message, Throwable thrown) {
         int level
@@ -41,42 +50,71 @@ class LoggerFacadeImpl implements LoggerFacade {
 
     @Override
     void log(int level, String message, Throwable thrown) {
-        switch (level) {
-            case TRACE_INT: logger.trace(message, thrown); break
-            case DEBUG_INT: logger.debug(message, thrown); break
-            case INFO_INT: logger.info(message, thrown); break
-            case WARN_INT: logger.warn(message, thrown); break
-            case ERROR_INT: logger.error(message, thrown); break
-            case FATAL_INT: logger.error(message, thrown); break
-            case ALL_INT: logger.warn(message, thrown); break
-            case OFF_INT: break // do nothing
+        if (level == TRACE_INT && traceEnabled) {
+            logger.trace(message, thrown)
+        } else if (level == DEBUG_INT && debugEnabled) {
+            logger.debug(message, thrown)
+        } else if (level == INFO_INT && infoEnabled) {
+            logger.info(message, thrown)
+        } else if (level == WARN_INT && warnEnabled) {
+            logger.warn(message, thrown)
+        } else if (level == ERROR_INT && errorEnabled) {
+            logger.error(message, thrown)
+        } else if (level == FATAL_INT && errorEnabled) {
+            logger.error(message, thrown)
+        } else if (level == ALL_INT) {
+            logger.warn(message, thrown)
         }
     }
 
     void trace(String message) { log(TRACE_INT, message, null) }
+
     void debug(String message) { log(DEBUG_INT, message, null) }
+
     void info(String message) { log(INFO_INT, message, null) }
+
     void warn(String message) { log(WARN_INT, message, null) }
+
     void error(String message) { log(ERROR_INT, message, null) }
 
     void trace(String message, Throwable thrown) { log(TRACE_INT, message, thrown) }
+
     void debug(String message, Throwable thrown) { log(DEBUG_INT, message, thrown) }
+
     void info(String message, Throwable thrown) { log(INFO_INT, message, thrown) }
+
     void warn(String message, Throwable thrown) { log(WARN_INT, message, thrown) }
+
     void error(String message, Throwable thrown) { log(ERROR_INT, message, thrown) }
 
-    @Override
-    boolean logEnabled(int level) {
+    boolean isLevelEnabled(int level) {
         switch (level) {
-            case TRACE_INT: return logger.isTraceEnabled()
-            case DEBUG_INT: return logger.isDebugEnabled()
-            case INFO_INT: return logger.isInfoEnabled()
-            case WARN_INT: return logger.isWarnEnabled()
-            case ERROR_INT:
-            case FATAL_INT: return logger.isErrorEnabled()
-            case ALL_INT: return logger.isWarnEnabled()
-            case OFF_INT: return false
+            case TRACE_INT: return traceEnabled
+            case DEBUG_INT: return debugEnabled
+            case INFO_INT: return infoEnabled
+            case WARN_INT: return warnEnabled
+            case ERROR_INT: case FATAL_INT: return errorEnabled
+            case ALL_INT: return traceEnabled && debugEnabled && infoEnabled && warnEnabled && errorEnabled
+            case OFF_INT: return !traceEnabled && !debugEnabled && !infoEnabled && !warnEnabled && !errorEnabled
             default: return false
+        }
+    }
+
+    void setLevelEnabled(int level, boolean enabled) {
+        switch (level) {
+            case TRACE_INT: traceEnabled = enabled; break
+            case DEBUG_INT: debugEnabled = enabled; break
+            case INFO_INT: infoEnabled = enabled; break
+            case WARN_INT: warnEnabled = enabled; break
+            case ERROR_INT: case FATAL_INT: errorEnabled = enabled; break
+            case ALL_INT:
+                traceEnabled = enabled
+                debugEnabled = enabled
+                infoEnabled = enabled
+                warnEnabled = enabled
+                errorEnabled = enabled
+                break
+            default: break
         }
     }
 }

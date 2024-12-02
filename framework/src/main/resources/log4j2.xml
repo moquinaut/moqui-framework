@@ -63,6 +63,8 @@ https://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout
         <Logger name="org.moqui.impl.entity.EntityFindBuilder" level="${sys:moqui.logger.level.entity_find}"/>
         <!-- show SQL generated for crud ops: -->
         <Logger name="org.moqui.impl.entity.EntityQueryBuilder" level="${sys:moqui.logger.level.entity_query}"/>
+        <!-- allow changing log levels dynamically: -->
+        <Logger name="org.moqui.impl.context.LoggerFacadeImpl" level="trace"/>
 
         <Logger name="org.moqui" level="info"/>
 

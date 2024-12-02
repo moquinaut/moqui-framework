@@ -63,6 +63,6 @@ public interface LoggerFacade {
     void warn(String message, Throwable thrown);
     void error(String message, Throwable thrown);
 
-    /** Is the given logging level enabled? */
-    boolean logEnabled(int level);
+    boolean isLevelEnabled(int level);
+    void setLevelEnabled(int level, boolean enabled);
 }
