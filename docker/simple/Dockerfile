@@ -34,7 +34,7 @@ RUN if [ -d runtime/opensearch/bin ]; then echo "Installing OpenSearch User"; \
     fi
 
 # exposed as volumes for configuration purposes
-VOLUME ["/opt/moqui/runtime/conf", "/opt/moqui/runtime/lib", "/opt/moqui/runtime/classes", "/opt/moqui/runtime/ecomponent"]
+VOLUME ["/opt/moqui/runtime/conf", "/opt/moqui/runtime/lib", "/opt/moqui/runtime/classes", "/opt/moqui/runtime/component/external"]
 # exposed as volumes to persist data outside the container, recommended
 VOLUME ["/opt/moqui/runtime/log", "/opt/moqui/runtime/txlog", "/opt/moqui/runtime/sessions", "/opt/moqui/runtime/db", "/opt/moqui/runtime/$search_name"]
 

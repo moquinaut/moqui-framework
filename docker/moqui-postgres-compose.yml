@@ -51,7 +51,7 @@ services:
      - ./runtime/conf:/opt/moqui/runtime/conf
      - ./runtime/lib:/opt/moqui/runtime/lib
      - ./runtime/classes:/opt/moqui/runtime/classes
-     - ./runtime/ecomponent:/opt/moqui/runtime/ecomponent
+     - ./runtime/component/external:/opt/moqui/runtime/component/external
      - ./runtime/log:/opt/moqui/runtime/log
      - ./runtime/txlog:/opt/moqui/runtime/txlog
      - ./runtime/sessions:/opt/moqui/runtime/sessions

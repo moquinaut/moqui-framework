@@ -1,15 +1,8 @@
+include "framework"
 
-String[] getDirectoryProjects(String relativePath) {
-    File runtimeDir = file('runtime')
-    if (!runtimeDir.exists()) return new String[0]
-    File compsDir = file('runtime/' + relativePath)
-    if (!compsDir.exists()) return new String[0]
-    return compsDir.listFiles().findAll { it.isDirectory() && it.listFiles().find { it.name == 'build.gradle' } }
-            .collect { "runtime:${relativePath}:${it.getName()}" } as String[]
+fileTree(dir: "runtime/component", include: "**/build.gradle").each { file ->
+    def projectDir = file.parentFile
+    def parentDir = file.parentFile.parentFile
+    include ":runtime:component:${parentDir.name}:${projectDir.name}"
+    project(":runtime:component:${parentDir.name}:${projectDir.name}").projectDir = projectDir
 }
-
-include 'framework'
-include getDirectoryProjects('base-component')
-include getDirectoryProjects('mantle')
-include getDirectoryProjects('component')
-include getDirectoryProjects('ecomponent')
